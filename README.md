@@ -30,11 +30,11 @@ $ ./code-HWCRO u:30988c6643a9d86e389c50483422158c
 Read code from **proinfo.bin** (/dev/block/platform/mtk-msdc.0/11120000.msdc0/by-name/proinfo)
 ```
 $ adb pull /dev/block/platform/mtk-msdc.0/11120000.msdc0/by-name/proinfo proinfo.bin
-$ ./code-HWCRO f:/var/proinfo.bin
+$ ./code-HWCRO f:./proinfo.bin
 [+] Key unlock: (0123456789ABCDEF)
 ```
 
-If need get custom unlock code 0123456789ABCDEF, for example, to write to **proinfo.bin**
+If need generate custom unlock code 0123456789ABCDEF and print debug information, for example, to write to **proinfo.bin**
 ```
 $ ./code-HWCRO l:0123456789ABCDEF 1
 [+] Key unlock (hex): (30988c6643a9d86e389c50483422158c)
