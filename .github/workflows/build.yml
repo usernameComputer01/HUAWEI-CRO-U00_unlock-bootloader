@@ -1,0 +1,45 @@
+name: Build and publish
+
+on:
+    # push:
+    #     tags:
+    #         - "*"
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+
+            - run: mkdir out
+
+            - name: Update repo
+              run: sudo apt-get update -q
+
+            - name: Install toolchain Linux
+              run:  sudo apt-get install -q -y gcc-i686-linux-gnu gcc-arm-linux-gnueabi
+
+            - name: Install toolchain Windows
+              run:  sudo apt-get install -q -y gcc-mingw-w64-i686 gcc-mingw-w64-x86-64
+
+            - name: Bulild for Linux
+              run: |
+                gcc code-HWCRO.c -o out/code-HWCRO_x86_64.elf -Wall -O2 -s -static
+                i686-linux-gnu-gcc code-HWCRO.c -o out/code-HWCRO_i686.elf -Wall -O2 -s -static
+                arm-linux-gnueabi-gcc code-HWCRO.c -o out/code-HWCRO_armel.elf -Wall -O2 -s -static
+
+            - name: Bulild for Windows
+              run: |
+                i686-w64-mingw32-gcc code-HWCRO.c -o out/code-HWCRO_i686 -Wall -O2 -s -static
+                x86_64-w64-mingw32-gcc code-HWCRO.c -o out/code-HWCRO_x86_64 -Wall -O2 -s -static
+
+            - name: Upload binaries to release
+              uses: svenstaro/upload-release-action@v2
+              with:
+                  repo_token: ${{ secrets.GITHUB_TOKEN }}
+                  file: out/*
+                  file_glob: true
+                  overwrite: true
+                  tag: CRO-U00
+                #   tag: ${{ github.ref }}
